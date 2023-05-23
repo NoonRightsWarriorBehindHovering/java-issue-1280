@@ -24,11 +24,15 @@ public class ExampleReproducible {
   public static void main(String[] args) {
     try (Playwright playwright = Playwright.create()) {
       Browser browser = playwright.chromium().launch();
-      BrowserContext context = browser.newContext(new Browser.NewContextOptions()
-        .setRecordVideoDir(Paths.get("videos")));
-      Page page = context.newPage();
-      page.navigate("http://playwright.dev");
-      System.out.println(page.title());
+      try {
+        BrowserContext context = browser.newContext(new Browser.NewContextOptions()
+          .setRecordVideoDir(Paths.get("videos")));
+        Page page = context.newPage();
+        page.navigate("http://playwright.dev");
+        System.out.println(page.title());
+      } finally {
+        if (browser != null) browser.close();
+      }
     }
   }
 }
